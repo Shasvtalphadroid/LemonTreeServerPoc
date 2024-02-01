@@ -6,6 +6,7 @@ import { maximumMatching } from '../controllers/maximumMatching.js';
 import { scanVoterIdBack, scanVoterIdFront} from '../controllers/ScanVoterId.js';
 import { scanPassport } from '../controllers/scanPassport.js';
 import { scanDl } from '../controllers/scanDl.js';
+import { AIAgent } from '../controllers/openai.js';
 
 const router = express.Router();
 

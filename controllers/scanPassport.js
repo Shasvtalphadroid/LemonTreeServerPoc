@@ -99,17 +99,19 @@ export const scanPassport = async (req, res) =>{
       res.status(404)
     }
     const url = 'data:image/jpeg;base64,'+idImage;
-    const profilephoto = await imageExtraction(idImage);
+    // const profilephoto = await imageExtraction(idImage);
 
-    const ocrdata = await ocrSpace(url,{ apiKey: 'K89692836588957'});
-    const text = ocrdata.ParsedResults[0].ParsedText;
-      // const text = await scanTesseract(url);
+    // const ocrdata = await ocrSpace(url,{ apiKey: 'K89692836588957'});
+    // const text = ocrdata.ParsedResults[0].ParsedText;
+      const text = await scanTesseract(url);
       // const text = await gptImage(url);
       // const data = geminiScanImageData(url);
       // console.log(text);
     //   const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
-      const str = await parseData(text);
+      // const str = await parseData(text);
+      const prompt = `Extract the releavent information (name,dob,gender,address,expireDate,country) from the given string and return it as a js object. The string is as follows :`;
+      const str = await scanGPTData({userData:text,prompt:prompt});
       // console.log(str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
@@ -125,10 +127,11 @@ export const scanPassport = async (req, res) =>{
         name : data.name ? data.name : null,
         dob: data.dob ? data.dob : null,
         gender: data.gender? data.dob : null,
-        expireDate: data.exp ? data.exp : null,
-        photo: profilephoto ? 'data:image/jpeg;base64'+profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
+        expireDate: data.expireDate ? data.expireDate : null,
+        country: data.country ? data.country : null,
+        // photo: profilephoto ? 'data:image/jpeg;base64'+profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
       }
-      if(userData.name === null || userData.dob === null || userData.gender === null || userData.expireDate === null){
+      if(userData.name === null || userData.dob === null || userData.gender === null || userData.expireDate === null|| data.country === null){
         res.status(404)
       }
       if(!checkPattern(userData)){

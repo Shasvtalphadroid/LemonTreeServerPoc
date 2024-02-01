@@ -97,7 +97,7 @@ export const scanVoterIdFront = async (req, res) =>{
       res.status(404)
     }
     const url = 'data:image/jpeg;base64,'+idImage;
-    const profilephoto = await imageExtraction(idImage);
+    // const profilephoto = await imageExtraction(idImage);
     // const ocrdata = await ocrSpace(url,{ apiKey: 'K89692836588957'});
     // const text = ocrdata.ParsedResults[0].ParsedText;
       const text = await scanTesseract(url);
@@ -106,7 +106,8 @@ export const scanVoterIdFront = async (req, res) =>{
       // console.log(text);
       // const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
-      const str = await parseData(text);
+      const prompt = `Extract the releavent information (name,father's_name) from the given string and return it as a js object. The string is as follows :`;
+      const str = await parseData({userData:text, prompt: prompt});
       // console.log(str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
@@ -120,7 +121,7 @@ export const scanVoterIdFront = async (req, res) =>{
       }
       const userData = {
         name : data.name ? data.name : "",
-        photo: profilephoto ? 'data:image/jpeg;base64'+profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
+        // photo: profilephoto ? 'data:image/jpeg;base64'+profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
       }
       if(userData.name === ""){
         res.status(404)
@@ -155,8 +156,9 @@ export const scanVoterIdFront = async (req, res) =>{
         // console.log(text);
         // const text = await gptImage(url);
         // const data = geminiScanImageData(url);
-        const str = await parseData(text);
-        // const str = await scanGPTData(text);
+        // const str = await parseData(text);
+        const prompt = `Extract the releavent information (name,dob,gender,address) from the given string and return it as a js object. The string is as follows :`;
+        const str = await scanGPTData({userData:text,prompt:prompt});
         // console.log(str);
         const startIndex = str.indexOf('{');
         const endIndex = str.lastIndexOf('}') + 1;
