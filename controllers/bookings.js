@@ -42,7 +42,6 @@ export const getDetails = async(req,res) => {
         if(!booking)
             res.status(401).json({ message: "No booking found" });
         else{
-            console.log(booking)
             res.status(200).json(booking);
         }
     } catch(error){
@@ -65,7 +64,6 @@ export const editBookingDeatails = async(req,res) => {
 
             }
         })
-        console.log(booking);
     await Bookings.findOneAndUpdate({name: bookingName},booking,{new: true});
         res.status(200).json(booking);
 
