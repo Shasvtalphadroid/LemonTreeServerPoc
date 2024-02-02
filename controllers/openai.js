@@ -68,7 +68,7 @@ export const scanGPTDataAdhaarFront = async (userData) => {
     return result;
 }
 export const scanGPTDataAdhaarBack = async (userData) => {
-  const prompt = ` If The Given String must contain keyword "Address" then Extract infomartion (address only) and neglect any numbers from the given string and return it as a js object Else return false. The string is as follows : ${userData}`;
+  const prompt = ` If The Given String must contain keyword "Address" then Extract infomartion (address) and neglect any numbers from the given string and return it as a js object Else return false. The string is as follows : ${userData}`;
   const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'system', content: 'You are a helpful accurate assistant.' },{ role: 'user', content: prompt }],

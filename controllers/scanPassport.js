@@ -117,6 +117,10 @@ export const scanPassport = async (req, res, next) =>{
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
       const objectStr = str.substring(startIndex, endIndex);
+      if (objectStr === undefined || objectStr === null || objectStr === "") {
+        res.status(404).send("Please try again")
+      }
+      else{
       // Parse the extracted object into a JavaScript object
       const data = eval('(' + objectStr + ')');
       console.log(data);
@@ -148,6 +152,7 @@ export const scanPassport = async (req, res, next) =>{
         await newUserData.save();
         res.status(200).json(newUserData);
       }
+    }
     }catch (error) {
       console.error(error);
       res.status(400).json(error)

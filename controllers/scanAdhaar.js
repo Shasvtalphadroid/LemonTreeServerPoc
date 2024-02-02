@@ -125,7 +125,7 @@ export const scanAdhaarFront = async (req, res) => {
       // const text = ocrdata.ParsedResults[0].ParsedText;
       // const text = await gptImage(url);
       // const data = geminiScanImageData(url);
-      // console.log(text);
+      console.log(text);
       const str = await scanGPTDataAdhaarFront(text);
       // const str = geminiScanImageData(text);
       // const str = await parseData(text);
@@ -135,6 +135,10 @@ export const scanAdhaarFront = async (req, res) => {
       // Extract the object substring
       const objectStr = str.substring(startIndex, endIndex);
       // Parse the extracted object into a JavaScript object
+      if (objectStr === undefined || objectStr === null || objectStr === "") {
+        res.status(404).send("Please try again")
+      }
+      else{
       const data = eval('(' + objectStr + ')');
 
       if (!data) {
@@ -155,12 +159,14 @@ export const scanAdhaarFront = async (req, res) => {
           res.status(404)
         }
         else {
+          console.log(userData);
           const newUserData = new Adhaar(userData);
           await newUserData.save();
-          res.json(newUserData).status(200);
+          res.status(200).json(newUserData);
         }
       }
     }
+  }
   } catch (error) {
     res.status(404)
     console.error(error);
@@ -193,6 +199,10 @@ export const scanAdhaarBack = async (req, res) => {
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
       const objectStr = str.substring(startIndex, endIndex);
+      if (objectStr === undefined || objectStr === null || objectStr === "") {
+        res.status(404).send("Please try again")
+      }
+      else{
       // Parse the extracted object into a JavaScript object
       const data = eval('(' + objectStr + ')');
       console.log("data", data);
@@ -204,11 +214,8 @@ export const scanAdhaarBack = async (req, res) => {
         const newUserData = {
           address: data.address ? data.address : null,
         }
-        if (newUserData.name === null || newUserData.dob === null || newUserData.gender === null || newUserData.name === undefined || newUserData.dob === undefined || newUserData.gender === undefined || newUserData.name === "" || newUserData.dob === "" || newUserData.gender === "") {
-          res.status(404);
-        }
-        else if (!checkPattern(newUserData)) {
-          res.status(404);
+        if (newUserData.address === null) {
+          res.status(404).json("Please try again");
         }
         else {
           await Adhaar.findOneAndUpdate({ _id: id }, newUserData, { new: true });
@@ -217,6 +224,7 @@ export const scanAdhaarBack = async (req, res) => {
         }
       }
     }
+  }
   } catch (error) {
     res.status(404);
     console.error(error);

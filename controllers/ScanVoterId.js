@@ -108,7 +108,7 @@ export const scanVoterIdFront = async (req, res) => {
       console.log(text);
       // const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
-      const prompt = `If The Given String must contain keyword "Name" then Extract infomartion (name only) and neglect any other thing from the given string and return it as a js object. The string is as follows :`;
+      const prompt = `If The Given String must contain keyword "Name" then Extract infomartion (name only) and neglect any other thing from the given string and give me as a js object. The string is as follows:`;
       const str = await scanGPTData({ userData: text, prompt: prompt });
       console.log(str);
       const startIndex = str.indexOf('{');
