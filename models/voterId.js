@@ -7,15 +7,12 @@ const VoterIdSchema = new mongoose.Schema({
     },
     dob:{
         type:String,
-        require:true
     },
     gender:{
         type:String,
-        require:true
     },
     address:{
         type:String,
-        require:true
     },
     photo:{
         type:String,
