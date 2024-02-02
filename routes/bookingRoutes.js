@@ -1,5 +1,5 @@
 import express from 'express';
-import { bookingidSearch, bookingnameSearch,addDetails, editBookingDeatails, getDetails} from '../controllers/bookings.js';
+import { bookingidSearch, bookingnameSearch,addDetails, editBookingDeatails, getDetails, verifyingId} from '../controllers/bookings.js';
 import {scanAdhaarBack, scanAdhaarFront} from '../controllers/scanAdhaar.js';
 import { createOrder, verifyPayment } from '../controllers/razorpay.js';
 import { maximumMatching } from '../controllers/maximumMatching.js';
@@ -19,6 +19,7 @@ router.patch('/editBookings',editBookingDeatails);
 router.post('/makePayment', createOrder);
 router.get('/verifyPayment', verifyPayment);
 router.post('/maximumMatch',maximumMatching);
+router.patch('/verifingId',verifyingId );
 
 //Scaneing Routes
 router.post("/AdhaarScanfront",scanAdhaarFront);

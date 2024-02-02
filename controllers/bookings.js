@@ -41,8 +41,10 @@ export const getDetails = async(req,res) => {
         const booking = await Bookings.findOne({name: req.query.bookingName});
         if(!booking)
             res.status(401).json({ message: "No booking found" });
-        else
+        else{
+            console.log(booking)
             res.status(200).json(booking);
+        }
     } catch(error){
         res.status(400).json({ message: error.message });
     }
@@ -59,6 +61,30 @@ export const editBookingDeatails = async(req,res) => {
             if(guest.name === guestName){
                 guest.idUploaded = idUploaded;
                 guest.name = editedGuestName;
+                guest.inProgress = false;
+
+            }
+        })
+        console.log(booking);
+    await Bookings.findOneAndUpdate({name: bookingName},booking,{new: true});
+        res.status(200).json(booking);
+
+    }catch(error){
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
+export const verifyingId = async(req,res) => {
+    const {bookingName, guestName} = req.body;
+    try{
+        const booking = await Bookings.findOne({name: bookingName});
+        if(!booking)
+            res.status(401).json({ message: "No booking found" });
+
+        booking.guestList.map((guest) => {
+            if(guest.name === guestName){
+                guest.inProgress = true;
             }
         })
     await Bookings.findOneAndUpdate({name: bookingName},booking,{new: true});
