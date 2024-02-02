@@ -66,8 +66,8 @@ if (
     isFormatValid(userData.name, namePattern) &&
     isFormatValid(userData.dob, dobPattern) &&
     isFormatValid(userData.gender, genderPattern) &&
-    isFormatValid(userData.expireDate,expiryDatePattern )
-
+    isFormatValid(userData.country,namePattern) &&
+    isFormatValid(userData.expireDate,expiryDatePattern)
 ) {
     return true;
 } else {
@@ -83,7 +83,7 @@ const scanTesseract = async (imageUrl) => {
       const { data: { text } } = await worker.recognize(imageUrl);
       await worker.terminate();
       if(text===undefined){
-        res.status(404).json("Please try again")
+        return "";
       }
       // console.log(text);
       return text;
@@ -92,11 +92,12 @@ const scanTesseract = async (imageUrl) => {
   }
 }
 
-export const scanPassport = async (req, res) =>{
-  const {idImage} = req.body;
+export const scanPassport = async (req, res, next) =>{
+  // console.log(req.body);
+  const { idImage } = req.body;
   try {
     if(idImage===undefined || idImage===null || idImage===""){
-      res.status(404)
+      res.status(404).send("Please try again")
     }
     const url = 'data:image/jpeg;base64,'+idImage;
     // const profilephoto = await imageExtraction(idImage);
@@ -106,11 +107,10 @@ export const scanPassport = async (req, res) =>{
       const text = await scanTesseract(url);
       // const text = await gptImage(url);
       // const data = geminiScanImageData(url);
-      // console.log(text);
+      console.log(text);
     //   const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
-      // const str = await parseData(text);
-      const prompt = `Extract the releavent information (name,dob,gender,address,expireDate,country) from the given string and return it as a js object. The string is as follows :`;
+      const prompt = `Analyze the given string and logicaly Extract the releavent information (name,dob,address,gender,validity,country) from the given string and return it as a js object. The string is as follows :`;
       const str = await scanGPTData({userData:text,prompt:prompt});
       // console.log(str);
       const startIndex = str.indexOf('{');
@@ -119,35 +119,39 @@ export const scanPassport = async (req, res) =>{
       const objectStr = str.substring(startIndex, endIndex);
       // Parse the extracted object into a JavaScript object
       const data = eval('(' + objectStr + ')');
-      // console.log(data);
+      console.log(data);
       if(!data){
-        res.status(404)
+        res.status(400).send("Please try again")
       }
       const userData = {
         name : data.name ? data.name : null,
-        dob: data.dob ? data.dob : null,
-        gender: data.gender? data.dob : null,
+        dob: data.dob? data.dob : null,
         expireDate: data.expireDate ? data.expireDate : null,
+        address: data.address ? data.address : null,
         country: data.country ? data.country : null,
+        gender : data.gender? (data.gender === 'F'? 'Female' : 'Male') : null
         // photo: profilephoto ? 'data:image/jpeg;base64'+profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
-      }
-      if(userData.name === null || userData.dob === null || userData.gender === null || userData.expireDate === null|| data.country === null){
-        res.status(404)
-      }
-      if(!checkPattern(userData)){
-        res.status(404)
-      }
-    
-      // userData[profile] = profileImage;
-      console.log(userData);
 
-      const newUserData = new Passport(userData);
-      await newUserData.save();
-      res.json(newUserData).status(200);
+      }
+
+      if(userData.dob === null|| userData.country === null || userData.gender === null || userData.name ===null  || userData.validity === null|| data.address === null){
+        res.status(400).send("Please try again")
+
+      }
+      else if(!checkPattern(userData)){
+        res.status(400).send("Please try again")
+
+      }
+      else{
+        console.log(userData);
+        const newUserData = new Passport(userData);
+        await newUserData.save();
+        res.status(200).json(newUserData);
+      }
     }catch (error) {
       console.error(error);
-      res.status(404).json(error)
+      res.status(400).json(error)
     }
+
   }
 
-  

@@ -53,7 +53,6 @@ export const scanGPTData = async ({userData, prompt}) => {
   
       // console.log('Generated Response:', response.choices[0].message.content);
       const result = response.choices[0].message.content;
-      console.log(result)
       return result;
 }
 export const scanGPTDataAdhaarFront = async (userData) => {
