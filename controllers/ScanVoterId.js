@@ -58,14 +58,15 @@ const checkPattern = (userData) => {
   const namePattern = /^[A-Za-z\s]+$/;
   const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
   const genderPattern = /^(Male|Female|Other)$/i;
+  const validityPattern1 = /^\d{2}\/\d{2}\/\d{4}$/;
+
   // Function to check if a value matches a given pattern
   function isFormatValid(value, pattern) {
     return pattern.test(value);
   }
 
   if (
-    isFormatValid(userData.name, namePattern) &&
-    isFormatValid(userData.dob, dobPattern) &&
+    (isFormatValid(userData.dob, dobPattern) || (isFormatValid(userData.dob ,validityPattern1))) &&
     isFormatValid(userData.gender, genderPattern)
   ) {
     return true;
