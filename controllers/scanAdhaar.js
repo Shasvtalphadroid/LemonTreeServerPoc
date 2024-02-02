@@ -67,10 +67,12 @@ const checkPattern = (userData) => {
 
   // Regular expression patterns for each property format
   const namePattern = /^[A-Za-z\s]+$/;
-  const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
+  const dobPattern1 = /^\d{2}\/\d{2}\/\d{4}$/;
   const genderPattern = /^(Male|Female|Other)$/i; // Case-insensitive match
   const adhaarNumberPattern1 = /^\d{4}\s\d{4}\s\d{4}$/;
   const adhaarNumberParttern2 = /^\d{12}$/;
+  const dobPattern2 = /^\d{2}-\d{2}-\d{4}$/;
+
 
   // Function to check if a value matches a given pattern
   function isFormatValid(value, pattern) {
@@ -79,7 +81,7 @@ const checkPattern = (userData) => {
 
   if (
     isFormatValid(userData.name, namePattern) &&
-    isFormatValid(userData.dob, dobPattern) &&
+    (isFormatValid(userData.dob, dobPattern1) || isFormatValid(userData.dob, dobPattern2)) &&
     isFormatValid(userData.gender, genderPattern) && (
       isFormatValid(userData.adhaarNumber, adhaarNumberPattern1) || isFormatValid(userData.adhaarNumber, adhaarNumberParttern2)) && (userData.name !== null || userData.name !== undefined || userData.name !== "") && (userData.dob !== null || userData.dob !== undefined || userData.dob !== "") && (userData.gender !== null || userData.gender !== undefined || userData.gender !== "") && (userData.idNumber !== null || userData.idNumber !== undefined || userData.idNumber !== "")
   ) {

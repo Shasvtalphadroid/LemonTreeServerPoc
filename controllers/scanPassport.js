@@ -110,7 +110,7 @@ export const scanPassport = async (req, res, next) =>{
       console.log(text);
     //   const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
-      const prompt = `Analyze the given string and logicaly Extract the releavent information (name,dob,address,gender,validity,country) from the given string and return it as a js object. The string is as follows :`;
+      const prompt = `Analyze the given string and logicaly Extract the releavent information (name,dob,address,gender,expireDate,country) from the given string and return it as a js object. The string is as follows :`;
       const str = await scanGPTData({userData:text,prompt:prompt});
       // console.log(str);
       const startIndex = str.indexOf('{');
@@ -138,7 +138,7 @@ export const scanPassport = async (req, res, next) =>{
 
       }
 
-      if(userData.dob === null|| userData.country === null || userData.gender === null || userData.name ===null  || userData.validity === null|| data.address === null){
+      if(userData.dob === null|| userData.country === null || userData.gender === null || userData.name ===null  || userData.expireDate === null|| data.address === null){
         res.status(400).send("Please try again")
 
       }

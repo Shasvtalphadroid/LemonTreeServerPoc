@@ -118,14 +118,15 @@ export const scanDl = async (req, res) => {
       }) from the given string and return it as a js object. The string is as follows :`;
       const str = await scanGPTData({ userData: text, prompt: prompt });
       // console.log(str);
-      if (objectStr === undefined || objectStr === null || objectStr === "") {
-        res.status(404).send("Please try again")
-      }
-      else{
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
       const objectStr = str.substring(startIndex, endIndex);
+      if (objectStr === undefined || objectStr === null || objectStr === "") {
+        res.status(404).send("Please try again")
+      }
+      else{
+      
       // Parse the extracted object into a JavaScript object
       const data = eval('(' + objectStr + ')');
       // console.log(data);

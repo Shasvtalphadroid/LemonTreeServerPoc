@@ -53,12 +53,12 @@ async function parseData(input) {
 
 // Function to check if a value matches a given pattern
 const checkPattern = (userData) => {
-
   // Regular expression patterns for each property format
   const namePattern = /^[A-Za-z\s]+$/;
   const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
   const genderPattern = /^(Male|Female|Other)$/i;
-  const validityPattern1 = /^\d{2}\/\d{2}\/\d{4}$/;
+  const validityPattern1 = /^\d{2}-\d{2}-\d{4}$/;
+
 
   // Function to check if a value matches a given pattern
   function isFormatValid(value, pattern) {
@@ -66,7 +66,7 @@ const checkPattern = (userData) => {
   }
 
   if (
-    (isFormatValid(userData.dob, dobPattern) || (isFormatValid(userData.dob ,validityPattern1))) &&
+    ((isFormatValid(userData.dob, dobPattern) || isFormatValid(userData.dob ,validityPattern1))) &&
     isFormatValid(userData.gender, genderPattern)
   ) {
     return true;
@@ -177,15 +177,18 @@ export const scanVoterIdBack = async (req, res) => {
       }
       else {
         const data = eval('(' + objectStr + ')');
+        console.log("data",data);
         const newUserData = {
           dob: data.dob ? data.dob : null,
           gender: data.gender ? data.gender : null,
           address: data.address ? data.address : null,
         }
-        if (newUserData.name === null || newUserData.dob === null || newUserData.gender === null || data.address === null) {
+        if (newUserData.dob === null || newUserData.gender === null || newUserData.address === null) {
           res.status(404).json("Please try again");
+          ("null validation****************")
         }
         else if (!checkPattern(newUserData)) {
+          console.log("pattern validation****************")
           res.status(404).json("Please try again");
         }
         else {
