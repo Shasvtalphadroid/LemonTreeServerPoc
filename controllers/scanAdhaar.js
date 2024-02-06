@@ -83,7 +83,11 @@ const checkPattern = (userData) => {
     isFormatValid(userData.name, namePattern) &&
     (isFormatValid(userData.dob, dobPattern1) || isFormatValid(userData.dob, dobPattern2)) &&
     isFormatValid(userData.gender, genderPattern) && (
-      isFormatValid(userData.adhaarNumber, adhaarNumberPattern1) || isFormatValid(userData.adhaarNumber, adhaarNumberParttern2)) && (userData.name !== null || userData.name !== undefined || userData.name !== "") && (userData.dob !== null || userData.dob !== undefined || userData.dob !== "") && (userData.gender !== null || userData.gender !== undefined || userData.gender !== "") && (userData.idNumber !== null || userData.idNumber !== undefined || userData.idNumber !== "")
+      isFormatValid(userData.adhaarNumber, adhaarNumberPattern1) || isFormatValid(userData.adhaarNumber, adhaarNumberParttern2)) && 
+      (userData.name !== null || userData.name !== undefined || userData.name !== "") && 
+      (userData.dob !== null || userData.dob !== undefined || userData.dob !== "") && 
+      (userData.gender !== null || userData.gender !== undefined || userData.gender !== "") && 
+      (userData.adhaarNumber !== null || userData.adhaarNumber !== undefined || userData.adhaarNumber !== "")
   ) {
     return true;
   } else {
