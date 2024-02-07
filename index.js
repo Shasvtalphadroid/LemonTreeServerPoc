@@ -5,6 +5,7 @@ import cors from'cors';
 import cookieParser from "cookie-parser";
 import { createRequire } from "module";
 import BookingRoutes from "./routes/bookingRoutes.js";
+import CheckinRoutes from "./routes/checkinRoutes.js";
 import { AIAgent } from "./controllers/openai.js";
 
 const require = createRequire(import.meta.url);
@@ -28,6 +29,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use('/api/bookings',BookingRoutes);
+app.use('/api/checkin',CheckinRoutes);
 app.use(cookieParser());
 
 
@@ -57,6 +59,12 @@ app.use((err , req, res, next) => {
 })
 app.get('/', (req, res) => {
 	res.send('Running');
+});
+app.get('/ping', (req, res) => {
+	res.send('ping');
+});
+app.use('/*', (req, res) => {
+	res.send('not found');
 });
 
 // AIAgent();
