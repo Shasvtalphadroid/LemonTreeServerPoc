@@ -16,14 +16,14 @@ export const getCheckin = async (req, res) => {
                 new: true
             });
             // res.status(200).json({checkin, checkinUpdate});
-            res.status(200).send(`Hi, ${checkinUpdate.firstName} ${checkinUpdate.lastName || ''}. Please proceed with the instructions displayed on the screen.`);
+            res.status(200).json({message: `Hi, ${checkinUpdate.firstName} ${checkinUpdate.lastName || ''}. Please proceed with the instructions displayed on the screen.`});
             // res.status(200).json(checkinUpdate);
         } else {
-            res.status(200).send("");
+            res.status(200).json({message: ""});
             // res.status(200).json({});
         }
     } catch (error) {
-        res.status(401).send("");
+        res.status(401).json({message: ""});
         // res.status(401).json({ message: error.message });
     }
 }
