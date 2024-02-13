@@ -120,25 +120,15 @@ export const scanAdhaarFront = async (req, res) => {
   const { idImage} = req.body;
   try {
     if (idImage === undefined || idImage === null || idImage === "") {
-      res.status(404)
+      res.status(404).json("Please try again");
     }
     else {
       const url = 'data:image/jpg;base64,' + idImage;
-      // const profilephoto = await imageExtraction(idImage);
-      const profilephoto = await imageExtraction(idImage);
-      // console.log("profile",profilephoto);
-      // if(profilephoto===null || profilephoto===undefined){
-      //   res.status(404)
-      // }
       const text = await scanTesseract(url);
       // const ocrdata = await ocrSpace(url,{ apiKey: 'K89692836588957'});
       // const text = ocrdata.ParsedResults[0].ParsedText;
-      // const text = await gptImage(url);
-      // const data = geminiScanImageData(url);
       console.log(text);
       const str = await scanGPTDataAdhaarFront(text);
-      // const str = geminiScanImageData(text);
-      // const str = await parseData(text);
       console.log(str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
@@ -161,7 +151,7 @@ export const scanAdhaarFront = async (req, res) => {
           gender: data.gender ? data.gender : null,
           adhaarNumber: data.idNumber ? data.idNumber : null,
           idImage:url,
-          photo: profilephoto ? 'data:image/jpeg;base64' + profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
+          // photo: profilephoto ? 'data:image/jpeg;base64' + profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
         }
         if (userData.name === null || userData.dob === null || userData.adhaarNumber === null || userData.gender === null) {
           res.status(404)
