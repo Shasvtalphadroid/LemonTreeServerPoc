@@ -159,7 +159,7 @@ export const scanDl = async (req, res) => {
               firstName: firstName,
               lastName: lastName,
               idType: "Driving License",
-              idImage: url,
+              // idImage: url,
               nationality: "INDIA",
               idUploaded: true,
             }

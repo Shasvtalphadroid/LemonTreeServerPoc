@@ -88,11 +88,11 @@ const checkPattern = (userData) => {
     isFormatValid(userData.name, namePattern) &&
     (isFormatValid(userData.dob, dobPattern1) || isFormatValid(userData.dob, dobPattern2)) &&
     isFormatValid(userData.gender, genderPattern) && (
-      isFormatValid(userData.adhaarNumber, adhaarNumberPattern1) || isFormatValid(userData.adhaarNumber, adhaarNumberParttern2)) && 
-      (userData.name !== null || userData.name !== undefined || userData.name !== "") && 
-      (userData.dob !== null || userData.dob !== undefined || userData.dob !== "") &&
-       (userData.gender !== null || userData.gender !== undefined || userData.gender !== "") && 
-       (userData.adhaarNumber !== null || userData.adhaarNumber !== undefined || userData.adhaarNumber!== "")
+      isFormatValid(userData.adhaarNumber, adhaarNumberPattern1) || isFormatValid(userData.adhaarNumber, adhaarNumberParttern2)) &&
+    (userData.name !== null || userData.name !== undefined || userData.name !== "") &&
+    (userData.dob !== null || userData.dob !== undefined || userData.dob !== "") &&
+    (userData.gender !== null || userData.gender !== undefined || userData.gender !== "") &&
+    (userData.adhaarNumber !== null || userData.adhaarNumber !== undefined || userData.adhaarNumber !== "")
   ) {
     return true;
   } else {
@@ -117,7 +117,7 @@ const scanTesseract = async (imageUrl) => {
   }
 }
 export const scanAdhaarFront = async (req, res) => {
-  const { idImage} = req.body;
+  const { idImage } = req.body;
   try {
     if (idImage === undefined || idImage === null || idImage === "") {
       res.status(404).json("Please try again");
@@ -127,9 +127,9 @@ export const scanAdhaarFront = async (req, res) => {
       const text = await scanTesseract(url);
       // const ocrdata = await ocrSpace(url,{ apiKey: 'K89692836588957'});
       // const text = ocrdata.ParsedResults[0].ParsedText;
-      console.log(text);
+      // console.log(text);
       const str = await scanGPTDataAdhaarFront(text);
-      console.log(str);
+      console.log("GPT", str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
@@ -138,41 +138,41 @@ export const scanAdhaarFront = async (req, res) => {
       if (objectStr === undefined || objectStr === null || objectStr === "") {
         res.status(404).send("Please try again")
       }
-      else{
-        try{
-          const data = eval('(' + objectStr + ')');
-      if (!data) {
-        res.status(404).send("Please try again")
-      }
       else {
-        const userData = {
-          name: data.name ? data.name : null,
-          dob: data.dob ? data.dob : null,
-          gender: data.gender ? data.gender : null,
-          adhaarNumber: data.idNumber ? data.idNumber : null,
-          idImage:url,
-          // photo: profilephoto ? 'data:image/jpeg;base64' + profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
-        }
-        if (userData.name === null || userData.dob === null || userData.adhaarNumber === null || userData.gender === null) {
-          res.status(404)
-        }
-        else if (!checkPattern(userData)) {
-          res.status(404)
-        }
-        else {
-          // console.log(userData);
-          // const newUserData = new Adhaar(userData);
-          // await newUserData.save();
-          // res.status(200).json(newUserData);
-          res.status(200).json(userData);
+        try {
+          const data = eval('(' + objectStr + ')');
+          if (!data) {
+            res.status(404).send("Please try again")
+          }
+          else {
+            const userData = {
+              name: data.name ? data.name : null,
+              dob: data.dob ? data.dob : null,
+              gender: data.gender ? data.gender : null,
+              adhaarNumber: data.idNumber ? data.idNumber : null,
+              // idImage: url,
+              // photo: profilephoto ? 'data:image/jpeg;base64' + profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
+            }
+            if (userData.name === null || userData.dob === null || userData.adhaarNumber === null || userData.gender === null) {
+              res.status(404)
+            }
+            else if (!checkPattern(userData)) {
+              res.status(404)
+            }
+            else {
+              // console.log(userData);
+              // const newUserData = new Adhaar(userData);
+              // await newUserData.save();
+              // res.status(200).json(newUserData);
+              res.status(200).json(userData);
+            }
+          }
+        } catch (err) {
+          res.status(400);
+          // return;
         }
       }
-    }catch(err){
-      res.status(400);
-      // return;
     }
-    }
-  }
   } catch (error) {
     res.status(404)
     console.error(error);
@@ -182,7 +182,7 @@ export const scanAdhaarFront = async (req, res) => {
 
 
 export const scanAdhaarBack = async (req, res) => {
-  const { idImage,frontSideData,guestId,contactNumber} = req.body;
+  const { idImage, frontSideData, guestId, contactNumber } = req.body;
   console.log(guestId);
   try {
     if (idImage === undefined || idImage === null || idImage === "") {
@@ -202,50 +202,50 @@ export const scanAdhaarBack = async (req, res) => {
       if (objectStr === undefined || objectStr === null || objectStr === "") {
         res.status(404).send("Please try again")
       }
-      else{
-      // Parse the extracted object into a JavaScript object
-      const data = eval('(' + objectStr + ')');
-      console.log("data", data);
-      if (!data) {
-        res.status(404).json("Please try again")
-      }
       else {
-        // const data = JSON.parse(data);
-        if (data.address === null || !checkPattern(frontSideData)) {
-          res.status(404).json("Please try again");
+        // Parse the extracted object into a JavaScript object
+        const data = eval('(' + objectStr + ')');
+        console.log("data", data);
+        if (!data) {
+          res.status(404).json("Please try again")
         }
         else {
+          // const data = JSON.parse(data);
+          if (data.address === null || !checkPattern(frontSideData)) {
+            res.status(404).json("Please try again");
+          }
+          else {
             const nameParts = frontSideData.name.split(' ');
-            const lastName = nameParts.length > 1 ? nameParts.pop(): '';
+            const lastName = nameParts.length > 1 ? nameParts.pop() : '';
             const firstName = nameParts.join(' ');
-          const newUserData = { 
-            address: data.address,
-            firstName: firstName,
-            lastName: lastName,
-            name: frontSideData.name,
-            idType: "Adhaar",
-            idImage: frontSideData.idImage,
-            dob: frontSideData.dob,
-            nationality:"INDIA",
-            guestPicture:frontSideData.photo,
-            dateOfIssue: null,
-            dateOfExpiry: null,
-            idUploaded: true,
-          }
+            const newUserData = {
+              address: data.address,
+              firstName: firstName,
+              lastName: lastName,
+              name: frontSideData.name,
+              idType: "Adhaar",
+              // idImage: frontSideData.idImage,
+              dob: frontSideData.dob,
+              nationality: "INDIA",
+              guestPicture: frontSideData.photo,
+              dateOfIssue: null,
+              dateOfExpiry: null,
+              idUploaded: true,
+            }
 
-          const id = await ID.findOne({primaryBookerContactNumber:contactNumber});
-          var guests = id.guestList;
-          const index = guests.findIndex(obj => obj._id.toString() === guestId);
-          if(index !== -1){
-            guests[index] = {...newUserData,...guests[index]};
+            const id = await ID.findOne({ primaryBookerContactNumber: contactNumber });
+            var guests = id.guestList;
+            const index = guests.findIndex(obj => obj._id.toString() === guestId);
+            if (index !== -1) {
+              guests[index] = { ...newUserData, ...guests[index] };
+            }
+            var updatedguest = await ID.findOneAndUpdate({ primaryBookerContactNumber: contactNumber }, { guestList: guests }, { new: true });
+            console.log(updatedguest);
+            res.status(200).json(updatedguest);
           }
-          var updatedguest = await ID.findOneAndUpdate({primaryBookerContactNumber:contactNumber},{guestList: guests},{new:true});
-          console.log(updatedguest);
-          res.status(200).json(updatedguest);
         }
       }
     }
-  }
   } catch (error) {
     res.status(404).json(error);
     console.error(error);

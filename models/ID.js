@@ -11,7 +11,7 @@ const UserDataSchema = new mongoose.Schema({
         type:String,
     },
     guestList:[{
-        _id: { type: mongoose.Schema.Types.ObjectId, default: new mongoose.Types.ObjectId },
+        _id: {type: mongoose.Schema.Types.ObjectId, auto: true},
         idUploaded: {type: Boolean, default: false},
         inProgress: {type: Boolean, default: false},
         firstName: {type: String, default:null},

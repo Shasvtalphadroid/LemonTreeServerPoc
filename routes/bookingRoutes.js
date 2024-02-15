@@ -7,6 +7,7 @@ import { scanVoterIdBack, scanVoterIdFront} from '../controllers/ScanVoterId.js'
 import { scanPassport } from '../controllers/scanPassport.js';
 import { scanDl } from '../controllers/scanDl.js';
 import { addId, editGuestName, fetchGuestList } from '../controllers/Ids.js';
+import { addRooms, fetchRooms } from '../controllers/rooms.js';
 
 const router = express.Router();
 
@@ -38,6 +39,7 @@ router.post('/checkEarly',checkEarly);
 router.post('/addID', addId);
 
 
-
-
+// **************
+router.post('/addRoom', addRooms);
+router.get('/fetchRomms', fetchRooms);
 export default router;

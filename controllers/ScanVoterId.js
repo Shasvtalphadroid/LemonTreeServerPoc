@@ -111,7 +111,7 @@ export const scanVoterIdFront = async (req, res) => {
       console.log(text);
       // const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
-      const prompt = `If The Given String must contain keyword "Name" then Extract infomartion (name only) and neglect any other thing from the given string and give me as a js object. The string is as follows:`;
+      const prompt = `If The Given String must contain keyword "Name" then Extract infomartion (name) and neglect any other thing from the given string and give me as a js object. The string is as follows:`;
       const str = await scanGPTData({ userData: text, prompt: prompt });
       console.log(str);
       const startIndex = str.indexOf('{');
@@ -127,7 +127,7 @@ export const scanVoterIdFront = async (req, res) => {
       else {
         const userData = {
           name: data.name ? data.name : null,
-          idImage: url,
+          // idImage: url,
           // photo: profilephoto ? 'data:image/jpeg;base64'+profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
         }
         if (userData.name === null) {
@@ -140,6 +140,7 @@ export const scanVoterIdFront = async (req, res) => {
           // userData[profile] = profileImage;
           // console.log(userData);
           res.status(200).json(userData);
+          console.log(userData);
         }
       }
     }
@@ -203,7 +204,7 @@ export const scanVoterIdBack = async (req, res) => {
             lastName: lastName,
             name: frontSideData.name,
             idType: "Voter",
-            idImage: frontSideData.idImage,
+            // idImage: frontSideData.idImage,
             nationality: "INDIA",
             idUploaded: true,
           }

@@ -159,7 +159,7 @@ export const scanPassport = async (req, res, next) =>{
           firstName: firstName,
           lastName: lastName,
           idType: "Passport",
-          idImage: url,
+          // idImage: url,
           idUploaded: true,
         }
         console.log(userData);
