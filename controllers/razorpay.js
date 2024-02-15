@@ -27,8 +27,8 @@ export const createOrder = async (req, res) => {
             }
           })
           console.log(qr);
-          const qrCode = await QRCode.toDataURL(qr.image_url);
-        console.log(qrCode);
+        //   const qrCode = await QRCode.toDataURL(qr.image_url);
+        // console.log(qrCode);
         res.status(200).json({qrCodeId:qr.id,qrCodeUrl:qr.image_url});
     }catch(error){
         console.log(error)

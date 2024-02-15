@@ -86,12 +86,16 @@ export const getDetailsData = async (req, res) => {
 export const getDetailsContact = async (req, res) => {
     console.log(req.query.phoneNumber)
     try {
-        const booking = await Bookings.findOne({ contactNumber: req.query.phoneNumber });
+        const booking = await Bookings.find({ contactNumber: req.query.phoneNumber });
         if (!booking || booking.length === 0)
             res.status(401).json(parseInt(0));
         else {
-            console.log(booking);
-            res.status(200).json(booking);
+            var updatedBooking = booking[0];
+            for(var i =1;i<booking.length;i++){
+                updatedBooking.adults += booking[i].adults;
+                updatedBooking.children += booking[i].children;
+            }
+            res.status(200).json(updatedBooking);
         }
     } catch (error) {
         res.status(400).json({ message: error.message });

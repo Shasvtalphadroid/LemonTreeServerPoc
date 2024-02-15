@@ -37,6 +37,10 @@ const bookingSchema = new mongoose.Schema({
     checkOutTime:{
         type:String,
     },
+    // amountPaid:{
+    //     type:Number,
+    //     default:0
+    // }
 },
 {timestamps : true}
 );
