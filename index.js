@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { createRequire } from "module";
 import BookingRoutes from "./routes/bookingRoutes.js";
 import { AIAgent } from "./controllers/openai.js";
+import AvatarSpeaksRoutes from "./routes/avatarSpeaksRoutes.js"
 
 const require = createRequire(import.meta.url);
 mongoose.set("strictQuery", false);
@@ -28,6 +29,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb', extended: true }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 app.use('/api/bookings',BookingRoutes);
+app.use('/api/avatar-speaks', AvatarSpeaksRoutes);
 app.use(cookieParser());
 
 
