@@ -108,19 +108,19 @@ export const scanVoterIdFront = async (req, res) => {
       const text = await scanTesseract(url);
       // const text = await gptImage(url);
       // const data = geminiScanImageData(url);
-      console.log(text);
+      // console.log(text);
       // const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
       const prompt = `If The Given String must contain keyword "Name" then Extract infomartion (name) and neglect any other thing from the given string and give me as a js object. The string is as follows:`;
       const str = await scanGPTData({ userData: text, prompt: prompt });
-      console.log(str);
+      // console.log(str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
       const objectStr = str.substring(startIndex, endIndex);
       // Parse the extracted object into a JavaScript object
       const data = eval('(' + objectStr + ')');
-      console.log(data);
+      // console.log(data);
       if (!data) {
         res.status(404).send("Please try again")
       }
@@ -140,7 +140,7 @@ export const scanVoterIdFront = async (req, res) => {
           // userData[profile] = profileImage;
           // console.log(userData);
           res.status(200).json(userData);
-          console.log(userData);
+          // console.log(userData);
         }
       }
     }
@@ -163,11 +163,11 @@ export const scanVoterIdBack = async (req, res) => {
       // const ocrdata = await ocrSpace(url,{ apiKey: 'K89692836588957'});
       // const text = ocrdata.ParsedResults[0].ParsedText;
       const text = await scanTesseract(url);
-      console.log(text);
+      // console.log(text);
       // const str = await parseData(text);
       const prompt = `Extract the releavent information (dob,gender,address,dateOfIssue) from the given string else null and return it as a js object. The given string is as follows :`;
       const str = await scanGPTData({ userData: text, prompt: prompt });
-      console.log(str);
+      // console.log(str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
@@ -178,7 +178,7 @@ export const scanVoterIdBack = async (req, res) => {
       }
       else {
         const data = eval('(' + objectStr + ')');
-        console.log("data", data);
+        // console.log("data", data);
         var userData = {
           dob: data.dob ? data.dob : null,
           gender: data.gender ? ((data.gender === 'F' || data.gender === 'Female') ? 'Female' : 'Male' ): null,
@@ -187,11 +187,11 @@ export const scanVoterIdBack = async (req, res) => {
         }
         if (userData.dob === null || userData.gender === null || userData.address === null || userData.dateOfIssue === null) {
           res.status(404).json("Please try again");
-          console.log("****************null")
+          // console.log("****************null")
 
         }
         else if (!checkPattern(userData)) {
-          console.log("****************Pattern")
+          // console.log("****************Pattern")
           res.status(404).json("Please try again");
         }
         else {
@@ -208,7 +208,7 @@ export const scanVoterIdBack = async (req, res) => {
             nationality: "INDIA",
             idUploaded: true,
           }
-          console.log(userData);
+          // console.log(userData);
           const id = await ID.findOne({ primaryBookerContactNumber: contactNumber });
           var guests = id.guestList;
           const index = guests.findIndex(obj => obj._id.toString() === guestId);
@@ -216,7 +216,7 @@ export const scanVoterIdBack = async (req, res) => {
             guests[index] = { ...userData, ...guests[index] };
           }
           var updatedguest = await ID.findOneAndUpdate({ primaryBookerContactNumber: contactNumber }, { guestList: guests }, { new: true });
-          console.log(updatedguest);
+          // console.log(updatedguest);
           res.status(200).json(updatedguest);
         }
       }

@@ -108,7 +108,7 @@ export const scanDl = async (req, res) => {
       const text = await scanTesseract(url);
       // const text = await gptImage(url);
       // const data = geminiScanImageData(url);
-      console.log(text);
+      // console.log(text);
       //   const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
       const prompt = `Analyze the given string and logicaly Extract the releavent information ({
@@ -131,7 +131,7 @@ export const scanDl = async (req, res) => {
 
         // Parse the extracted object into a JavaScript object
         const data = eval('(' + objectStr + ')');
-        console.log(data);
+        // console.log(data);
         if (!data) {
           res.status(404).send("Please try again")
         }
@@ -163,7 +163,7 @@ export const scanDl = async (req, res) => {
               nationality: "INDIA",
               idUploaded: true,
             }
-            console.log(userData);
+            // console.log(userData);
             const id = await ID.findOne({ primaryBookerContactNumber: contactNumber });
             // console.log(id);
             var guests = id.guestList;
@@ -175,7 +175,7 @@ export const scanDl = async (req, res) => {
             }
             // console.log(guests);
             var updatedguest = await ID.findOneAndUpdate({ primaryBookerContactNumber: contactNumber }, { guestList: guests }, { new: true });
-            console.log(updatedguest);
+            // console.log(updatedguest);
             res.status(200).json(updatedguest);
           }
         }

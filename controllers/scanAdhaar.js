@@ -75,7 +75,7 @@ const checkPattern = (userData) => {
   const dobPattern1 = /^\d{2}\/\d{2}\/\d{4}$/;
   const genderPattern = /^(Male|Female|Other)$/i; // Case-insensitive match
   const adhaarNumberPattern1 = /^\d{4}\s\d{4}\s\d{4}$/;
-  const adhaarNumberParttern2 = /^\d{12}$/;
+  const adhaarNumberPattern2 = /^\d{12}$/;
   const dobPattern2 = /^\d{2}-\d{2}-\d{4}$/;
 
 
@@ -83,16 +83,11 @@ const checkPattern = (userData) => {
   function isFormatValid(value, pattern) {
     return pattern.test(value);
   }
-
   if (
     isFormatValid(userData.name, namePattern) &&
     (isFormatValid(userData.dob, dobPattern1) || isFormatValid(userData.dob, dobPattern2)) &&
-    isFormatValid(userData.gender, genderPattern) && (
-      isFormatValid(userData.adhaarNumber, adhaarNumberPattern1) || isFormatValid(userData.adhaarNumber, adhaarNumberParttern2)) &&
-    (userData.name !== null || userData.name !== undefined || userData.name !== "") &&
-    (userData.dob !== null || userData.dob !== undefined || userData.dob !== "") &&
-    (userData.gender !== null || userData.gender !== undefined || userData.gender !== "") &&
-    (userData.adhaarNumber !== null || userData.adhaarNumber !== undefined || userData.adhaarNumber !== "")
+    isFormatValid(userData.gender, genderPattern) && 
+    (isFormatValid(userData.adhaarNumber, adhaarNumberPattern1) || isFormatValid(userData.adhaarNumber, adhaarNumberPattern2))
   ) {
     return true;
   } else {
@@ -129,17 +124,16 @@ export const scanAdhaarFront = async (req, res) => {
       // const text = ocrdata.ParsedResults[0].ParsedText;
       // console.log(text);
       const str = await scanGPTDataAdhaarFront(text);
-      console.log("GPT", str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
-      const objectStr = str.substring(startIndex, endIndex);
+      const objectStr = str?.substring(startIndex, endIndex);
       // Parse the extracted object into a JavaScript object
-      if (objectStr === undefined || objectStr === null || objectStr === "") {
+
+      if (objectStr === undefined || objectStr === null || objectStr==="") {
         res.status(404).send("Please try again")
       }
       else {
-        try {
           const data = eval('(' + objectStr + ')');
           if (!data) {
             res.status(404).send("Please try again")
@@ -154,10 +148,10 @@ export const scanAdhaarFront = async (req, res) => {
               // photo: profilephoto ? 'data:image/jpeg;base64' + profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
             }
             if (userData.name === null || userData.dob === null || userData.adhaarNumber === null || userData.gender === null) {
-              res.status(404)
+              res.status(404).json("Please try again")
             }
-            else if (!checkPattern(userData)) {
-              res.status(404)
+            else if(!checkPattern(userData)) {
+              res.status(404).json("Please try again");
             }
             else {
               // console.log(userData);
@@ -167,14 +161,10 @@ export const scanAdhaarFront = async (req, res) => {
               res.status(200).json(userData);
             }
           }
-        } catch (err) {
-          res.status(400);
-          // return;
-        }
       }
     }
   } catch (error) {
-    res.status(404)
+    res.status(404).json(error);
     console.error(error);
   }
 }
@@ -205,7 +195,6 @@ export const scanAdhaarBack = async (req, res) => {
       else {
         // Parse the extracted object into a JavaScript object
         const data = eval('(' + objectStr + ')');
-        console.log("data", data);
         if (!data) {
           res.status(404).json("Please try again")
         }
@@ -240,7 +229,6 @@ export const scanAdhaarBack = async (req, res) => {
               guests[index] = { ...newUserData, ...guests[index] };
             }
             var updatedguest = await ID.findOneAndUpdate({ primaryBookerContactNumber: contactNumber }, { guestList: guests }, { new: true });
-            console.log(updatedguest);
             res.status(200).json(updatedguest);
           }
         }

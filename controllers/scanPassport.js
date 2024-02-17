@@ -109,12 +109,12 @@ export const scanPassport = async (req, res, next) =>{
       const text = await scanTesseract(url);
       // const text = await gptImage(url);
       // const data = geminiScanImageData(url);
-      console.log(text);
+      // console.log(text);
     //   const str = await scanGPTData(text);
       // const str = geminiScanImageData(text);
       const prompt = `Analyze the given string and logicaly Extract the releavent information (name,dob,address,gender,dateOfExpiry,dateOfIssue,country) from the given string and return it as a js object. The string is as follows :`;
       const str = await scanGPTData({userData:text,prompt:prompt});
-      console.log(str);
+      // console.log(str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
@@ -125,7 +125,7 @@ export const scanPassport = async (req, res, next) =>{
       else{
       // Parse the extracted object into a JavaScript object
       const data = eval('(' + objectStr + ')');
-      console.log(data);
+      // console.log(data);
       if(!data){
         res.status(400).send("Please try again")
       }
@@ -153,7 +153,7 @@ export const scanPassport = async (req, res, next) =>{
         const nameParts = userData.name.split(' ');
         const lastName = nameParts.length > 1 ? nameParts.pop(): '';
         const firstName = nameParts.join(' ');
-        console.log(userData);
+        // console.log(userData);
         userData = {
           ...userData,
           firstName: firstName,
@@ -162,7 +162,7 @@ export const scanPassport = async (req, res, next) =>{
           // idImage: url,
           idUploaded: true,
         }
-        console.log(userData);
+        // console.log(userData);
         const id = await ID.findOne({ primaryBookerContactNumber: contactNumber});
         // console.log(id);
         var guests = id.guestList;
@@ -174,7 +174,7 @@ export const scanPassport = async (req, res, next) =>{
         }
         // console.log(guests);
         var updatedguest = await ID.findOneAndUpdate({ primaryBookerContactNumber: contactNumber }, { guestList: guests }, { new: true });
-        console.log(updatedguest);
+        // console.log(updatedguest);
         res.status(200).json(updatedguest);
       }
     }
