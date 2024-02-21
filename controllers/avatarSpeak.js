@@ -1,3 +1,103 @@
+import ScreenState from "../models/screenstate.js";
+export const screenStateFetch = async (req, res) => {
+    try {
+        let avatarSpeakMessage = "";
+        const screenStateNotViewed = await ScreenState.findOne({
+            avatarViewed: false
+        });
+        if (screenStateNotViewed) {
+            const screenId = screenStateNotViewed?.screenId;
+            const screenStateNotViewedUpdated = await ScreenState.findByIdAndUpdate(
+                {
+                    _id: screenStateNotViewed?._id
+                },
+                {
+                    avatarViewed: true
+                },
+                {
+                    new: true
+                }
+            );
+            switch(screenId) {
+                case "1":
+                    avatarSpeakMessage = "Hello & Welcome. I am your assistant Alpha. How may I help you today?";
+                    break;
+                case "2":
+                    avatarSpeakMessage = "Please enter the First Name and Last Name. In case of Company Booking First Name will be Company’s Name.";
+                    break;
+                case "3":
+                    avatarSpeakMessage = "Please enter the Contact Number.";
+                    break;
+                case "4":
+                    avatarSpeakMessage = "Yay! Booking Found.";
+                    break;
+                case "5":
+                    avatarSpeakMessage = "Please show the ID proof on camera. If you are an Indian citizen, you can show Adhaar Card or Driving License or Voter Id card or Passport. If you are Foreign national its mandate to show Visa, Passport and Arrival Stamp.";
+                    break;
+                case "6":
+                    avatarSpeakMessage = "To scan IDs click on scan Id.";
+                    break;
+                case "118":
+                    avatarSpeakMessage = "All Guest ID taken. Thank you for your patience.";
+                    break;
+                case "123":
+                    avatarSpeakMessage = "Your booking amount is pending. Please select your mode of payment.";
+                    break;
+                case "140":
+                    avatarSpeakMessage = "Your Payment is successful.";
+                    break;
+                case "120":
+                    avatarSpeakMessage = "Check in process completed. Please contact reception for key collection or any other help.";
+                    break;
+                case "126":
+                    avatarSpeakMessage = "Please rate your Check-In experience.";
+                    break;
+                default:
+                    avatarSpeakMessage = "";
+            }
+            res.status(200).json({
+                screenId,
+                message: `screen id ${screenId} fetched successfully`,
+                screenStateNotViewed,
+                screenStateNotViewedUpdated,
+                avatarSpeakMessage
+            });
+        } else {
+            res.status(200).json({
+                avatarSpeakMessage
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "error occurred in fetching state"
+        });
+    }
+}
+export const screenStateUpdate = async (req, res) => {
+    try {
+        const { screenId } = req?.body;
+        console.log(screenId);
+        if (screenId) {
+            const newScreenId = await ScreenState.create({
+                screenId
+            });
+            res.status(200).json({
+                message: `screen id ${screenId} created successfully`,
+                newScreenId
+            });
+        } else {
+            res.status(400).json({
+                message: "screen id not present in payload"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "error occurred in saving state"
+        });
+    }
+}
 export const avatarSpeakScreen = async (req, res) => {
     const screenId = req?.query?.screenId;
     const type = req?.query?.type;
