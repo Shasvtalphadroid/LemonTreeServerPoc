@@ -49,6 +49,9 @@ export const screenStateFetch = async (req, res) => {
                 case "120":
                     avatarSpeakMessage = "Check in process completed. Please contact reception for key collection or any other help.";
                     break;
+                case "122":
+                    avatarSpeakMessage = "Please select the rooms in which you want to check-In.";
+                    break;
                 case "126":
                     avatarSpeakMessage = "Please rate your Check-In experience.";
                     break;
