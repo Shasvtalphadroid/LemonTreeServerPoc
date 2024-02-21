@@ -20,7 +20,7 @@ export const screenStateFetch = async (req, res) => {
             );
             switch(screenId) {
                 case "1":
-                    avatarSpeakMessage = "Hello & Welcome. I am your assistant Alpha. How may I help you today?";
+                    avatarSpeakMessage = "Hello & Welcome to lemon tree hotel. I am your assistant Alpha. How may I help you today?";
                     break;
                 case "2":
                     avatarSpeakMessage = "Please enter the First Name and Last Name. In case of Company Booking First Name will be Company’s Name.";
