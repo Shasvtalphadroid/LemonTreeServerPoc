@@ -1,48 +1,52 @@
 import mongoose from "mongoose";
 
-const bookingSchema = new mongoose.Schema({
-    firstName:{
-        type:String,
+const bookingSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
     },
-    lastName:{
-        type:String,
+    lastName: {
+      type: String,
     },
-    roomType:{
-        type:String,
+    roomType: {
+      type: String,
     },
-    roomPack:{
-        type:String,
+    roomPack: {
+      type: String,
     },
-    contactNumber:{
-        type:String,
+    contactNumber: {
+      type: String,
     },
-    bookingType:{
-        type:String,
+    roomNumber: {
+      type: String,
     },
-    adults:{
-        type:Number,
+    bookingType: {
+      type: String,
     },
-    children:{
-        type:Number,
+    adults: {
+      type: Number,
     },
-    checkInDate:{
-        type:String,
+    children: {
+      type: Number,
     },
-    checkOutDate:{
-        type:String,
+    checkInDate: {
+      type: String,
     },
-    checkInTime:{
-        type:String,
+    checkOutDate: {
+      type: String,
     },
-    checkOutTime:{
-        type:String,
+    checkInTime: {
+      type: String,
+    },
+    checkOutTime: {
+      type: String,
     },
     // amountPaid:{
     //     type:Number,
     //     default:0
     // }
-},
-{timestamps : true}
-);
+  },
+  { timestamps: true }
+)
 
 export default mongoose.model("Bookings", bookingSchema);

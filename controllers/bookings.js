@@ -66,20 +66,33 @@ export const getDetailsNew = async (req, res) => {
     }
 }
 
+/**
+ * Returns the bookings based on firstName and lastName
+ * @param {object} req 
+ * @param {object} res 
+ */
 export const getDetailsData = async (req, res) => {
-    console.log(req.query.firstName)
-    console.log(req.query.lastName)
 
     try {
-        const booking = await Bookings.findOne({ firstName: req.query.firstName, lastName: req.query.lastName });
-        if (!booking || booking.length === 0)
-            res.status(401).json(parseInt(0));
+        // find the bookings based on the query parameters
+        const booking = await Bookings.find({
+            firstName: req.query.firstName,
+            lastName: req.query.lastName
+        })
+
+        // if no booking is found or no bookings are found
+        if (!booking || booking.length === 0) {
+            // return a 401 status code and a JSON object with a message
+            res.status(401).json({ message: "No booking found" })
+        }
+        // if at least one booking is found
         else {
-            res.status(200).json(booking);
-            // res.status(200).json(booking);
+            // return a 200 status code and the booking(s)
+            res.status(200).json(booking)
         }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        // return a 400 status code and a JSON object with an error message
+        res.status(400).json({ message: error.message })
     }
 }
 
@@ -87,6 +100,7 @@ export const getDetailsContact = async (req, res) => {
     console.log(req.query.phoneNumber)
     try {
         const booking = await Bookings.find({ contactNumber: req.query.phoneNumber });
+        console.log("booking " , booking);
         if (!booking || booking.length === 0)
             res.status(401).json(parseInt(0));
         else {
@@ -148,3 +162,25 @@ export const checkEarly = async (req, res) => {
         res.status(404).json({error:err});
     }
 }
+
+export const bookingDetailsForCheckout = async (req, res) => {
+  const { lastName, roomNumber } = req.query
+  console.log(req.body)
+  try {
+    const booking = await Bookings.findOne({
+      lastName: lastName,
+      roomNumber: roomNumber,
+    })
+    if (!booking) res.status(401).json({ message: "No booking found" })
+    else res.status(200).json(booking)
+  } catch (err) {
+    res.status(404).json({ error: err })
+  }
+}
+
+
+
+export const masterCheckInData = async (req, res) => {}
+
+
+
