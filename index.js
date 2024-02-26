@@ -7,15 +7,16 @@ import { createRequire } from "module";
 import BookingRoutes from "./routes/bookingRoutes.js";
 import { AIAgent } from "./controllers/openai.js";
 import AvatarSpeaksRoutes from "./routes/avatarSpeaksRoutes.js"
+import FeedbackRoutes from "./routes/feedbackRotes.js"
+import GuestRoutes from "./routes/guestRoutes.js"
 
-const require = createRequire(import.meta.url);
-mongoose.set("strictQuery", false);
-dotenv.config();
-var bodyParser = require('body-parser');
+const require = createRequire(import.meta.url)
+mongoose.set("strictQuery", false)
+dotenv.config()
+var bodyParser = require("body-parser")
 
-
-const app = require("express")();
-const server =require("http").createServer(app);
+const app = require("express")()
+const server = require("http").createServer(app)
 
 // const io = require("socket.io")(server, {
 // 	cors: {
@@ -25,11 +26,13 @@ const server =require("http").createServer(app);
 // });
 // scanImage();
 
-app.use(cors());
-app.use(bodyParser.json({ limit: '50mb', extended: true }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-app.use('/api/bookings',BookingRoutes);
-app.use('/api/avatar-speaks', AvatarSpeaksRoutes);
+app.use(cors())
+app.use(bodyParser.json({ limit: "50mb", extended: true }))
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }))
+app.use("/api/bookings", BookingRoutes)
+app.use("/api/avatar-speaks", AvatarSpeaksRoutes)
+app.use("/api/feedback", FeedbackRoutes)
+app.use("/api/guest", GuestRoutes)
 app.use(cookieParser());
 
 
