@@ -116,27 +116,32 @@ export const scanAdhaarFront = async (req, res) => {
   const { idImage } = req.body;
   try {
     if (idImage === undefined || idImage === null || idImage === "") {
-      res.status(404).json("Please try again");
+      console.log("Please try again. ID Image is not given in payload");
+      res.status(404).json("Please try again. ID Image is not given in payload");
     } else {
       const url = 'data:image/jpg;base64,' + idImage;
+      console.log(urlimage);
       const text = await scanTesseract(url);
+      console.log('scanTesseract text : ', text);
       // const ocrdata = await ocrSpace(url,{ apiKey: 'K89692836588957'});
       // const text = ocrdata.ParsedResults[0].ParsedText;
       // console.log(text);
       const str = await scanGPTDataAdhaarFront(text);
+      console.log('scanGPTDataAdhaarFront str : ', str);
       const startIndex = str.indexOf('{');
       const endIndex = str.lastIndexOf('}') + 1;
       // Extract the object substring
       const objectStr = str?.substring(startIndex, endIndex);
+      console.log('objectStr : ', objectStr);
       // Parse the extracted object into a JavaScript object
 
       if (objectStr === undefined || objectStr === null || objectStr==="") {
-        res.status(404).send("Please try again")
+        res.status(404).send("Please try again. Scan string is empty")
       }
       else {
           const data = eval('(' + objectStr + ')');
           if (!data) {
-            res.status(404).send("Please try again")
+            res.status(404).send("Please try again. object string eval is invalid")
           }
           else {
             const userData = {
@@ -147,14 +152,16 @@ export const scanAdhaarFront = async (req, res) => {
               // idImage: url,
               // photo: profilephoto ? 'data:image/jpeg;base64' + profilephoto : "https://cirrusindia.co.in/wp-content/uploads/2016/10/dummy-profile-pic-male1.jpg",
             }
+            console.log('userData : ');
+            console.log(userData);
             if (userData.name === null || userData.dob === null || userData.adhaarNumber === null || userData.gender === null) {
-              res.status(404).json("Please try again")
+              res.status(404).json("Please try again. some user data is empty")
             }
             else if(!checkPattern(userData)) {
-              res.status(404).json("Please try again");
+              res.status(404).json("Please try again. Pattern doesn't match");
             }
             else {
-              // console.log(userData);
+              console.log(userData);
               // const newUserData = new Adhaar(userData);
               // await newUserData.save();
               // res.status(200).json(newUserData);
