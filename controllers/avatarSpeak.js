@@ -83,7 +83,8 @@ export const screenStateUpdate = async (req, res) => {
         console.log(screenId);
         if (screenId) {
             const newScreenId = await ScreenState.create({
-                screenId
+                screenId,
+                avatarViewed: false
             });
             res.status(200).json({
                 message: `screen id ${screenId} created successfully`,
