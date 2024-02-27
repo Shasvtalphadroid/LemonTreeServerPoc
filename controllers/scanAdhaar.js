@@ -8,6 +8,7 @@ import { gptImage, scanGPTDataAdhaarFront, scanGPTDataAdhaarBack } from "./opena
 import { geminiScanImageData } from "./gemini.js";
 import dotenv from "dotenv";
 import Adhaar from "../models/adhaar.js";
+import ScanData from "../models/scan.js";
 import { imageExtraction } from "./imageExtraction.js";
 
 
@@ -116,8 +117,7 @@ export const scanAdhaarFront = async (req, res) => {
   try {
     if (idImage === undefined || idImage === null || idImage === "") {
       res.status(404).json("Please try again");
-    }
-    else {
+    } else {
       const url = 'data:image/jpg;base64,' + idImage;
       const text = await scanTesseract(url);
       // const ocrdata = await ocrSpace(url,{ apiKey: 'K89692836588957'});
@@ -158,6 +158,9 @@ export const scanAdhaarFront = async (req, res) => {
               // const newUserData = new Adhaar(userData);
               // await newUserData.save();
               // res.status(200).json(newUserData);
+              await ScanData.create({
+                data: userData
+              });
               res.status(200).json(userData);
             }
           }
@@ -229,6 +232,9 @@ export const scanAdhaarBack = async (req, res) => {
               guests[index] = { ...newUserData, ...guests[index] };
             }
             var updatedguest = await ID.findOneAndUpdate({ primaryBookerContactNumber: contactNumber }, { guestList: guests }, { new: true });
+            await ScanData.create({
+              data: newUserData
+            });
             res.status(200).json(updatedguest);
           }
         }
