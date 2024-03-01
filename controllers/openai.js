@@ -66,6 +66,31 @@ export const scanGPTDataAdhaarFront = async (userData) => {
     const result = response.choices[0].message.content;
     return result;
 }
+
+export const extractAddressFromText = async (inputText) => {
+  const prompt = `Extract the address information from the given text:\n\n"${inputText}"\n\nReturn the extracted address as a JavaScript object.`
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful assistant that extracts addresses.",
+        },
+        { role: "user", content: prompt },
+      ],
+    })
+
+    // Extracting the response content from the API
+    const responseContent = response.choices[0].message.content
+
+    return responseContent
+  } catch (error) {
+    console.error("Error extracting address:", error)
+    return error
+  }
+}
 export const scanGPTDataAdhaarBack = async (userData) => {
   const prompt = ` If The Given String must contain keyword "Address" then Extract infomartion (address) and neglect any numbers from the given string and return it as a js object Else return false. The string is as follows : ${userData}`;
   const response = await openai.chat.completions.create({
