@@ -10,6 +10,9 @@ import {
   getDetailsData,
   checkEarly,
   bookingDetailsForCheckout,
+  fetchBookingDetails,
+  updateBookingDetails,
+  getBookingDetailsForCheckout,
 } from "../controllers/bookings.js"
 import { scanAdhaarBack, scanAdhaarFront } from "../controllers/scanAdhaar.js"
 import { createOrder, verifyPayment } from "../controllers/razorpay.js"
@@ -21,7 +24,7 @@ import {
 import { scanPassport } from "../controllers/scanPassport.js"
 import { scanDl } from "../controllers/scanDl.js"
 import { addId, editGuestName, fetchGuestList } from "../controllers/Ids.js"
-import { addRooms, fetchRooms } from "../controllers/rooms.js"
+import { addRooms, fetchRooms, fetchRoomsByPref } from "../controllers/rooms.js"
 
 const router = express.Router()
 
@@ -56,6 +59,13 @@ router.get("/fetchRomms", fetchRooms)
 
 // routes for booking details for checkout
 router.get("/bookingDetails", bookingDetailsForCheckout)
+
+// ****************   api routes v2 *****************//
+router.route("/find_booking").get(fetchBookingDetails)
+router.route("/update_booking").patch(updateBookingDetails)
+router.route("/find_booking_for_checkout").get(getBookingDetailsForCheckout)
+router.route("/fetch_rooms_preferred").get(fetchRoomsByPref)
+
 
 
 export default router;

@@ -36,6 +36,8 @@ app.use("/api/guest", GuestRoutes)
 app.use(cookieParser());
 
 
+app.use("/v2/api/bookings", BookingRoutes)
+
 
 const connect = () =>{
   mongoose.connect(process.env.MONGO).then(() =>{
