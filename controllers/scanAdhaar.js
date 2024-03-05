@@ -111,6 +111,30 @@ const scanTesseract = async (imageUrl) => {
     console.log(error)
   }
 }
+
+/**
+* Check if a string is a valid base64 image string.
+* @param {string} base64String - The string to be checked
+* @returns {boolean} true if the string is a valid base64 image string,
+* false otherwise
+*/
+const isValidBase64String = (base64String) => {
+  const validFormats = [
+    "data:image/jpeg;base64,", // JPEG
+    "data:image/jpg;base64,", // JPEG
+    "data:image/png;base64,", // PNG
+    "data:image/webp;base64,", // WebP
+  ]
+ 
+  for (const format of validFormats) {
+    if (base64String.startsWith(format)) {
+      return true
+    }
+  }
+ 
+  return false
+}
+
 export const scanAdhaarFront = async (req, res) => {
   const { idImage } = req.body
   try {
@@ -118,7 +142,12 @@ export const scanAdhaarFront = async (req, res) => {
       console.log("Please try again. ID Image is not given in payload")
       res.status(404).json("Please try again. ID Image is not given in payload")
     } else {
-      const url = idImage
+      let url = `${idImage}`
+      // Check if the string is a valid base64 image string
+      if (!isValidBase64String(url)) {
+        console.log("meme type not found :: adding data:image/jpeg;base64 to url")
+        url = `data:image/jpeg;base64,${url}`
+      }
 
       const text = await scanTesseract(url)
       console.log("scanTesseract text : ", text)
