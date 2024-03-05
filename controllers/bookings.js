@@ -184,7 +184,7 @@ export const bookingDetailsForCheckout = async (req, res) => {
  */
 export const fetchBookingDetails = async (req, res) => {
   // Destructure query parameters from the request
-  const { bookingId, firstName, lastName } = req.query
+  const { bookingId, firstName, lastName, contactNumber } = req.query
   console.log(req.query) // Log the query parameters
 
   try {
@@ -199,7 +199,11 @@ export const fetchBookingDetails = async (req, res) => {
     } else if (firstName && lastName) {
       filter.firstName = firstName
       filter.lastName = lastName
+      if (contactNumber) {
+        filter.contactNumber = contactNumber
+      }
     }
+    
 
     // Find bookings based on the filter
     const bookings = await Bookings.find(filter)
